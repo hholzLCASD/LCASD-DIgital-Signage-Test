@@ -1,0 +1,39 @@
+// Define your schedule rules (using 24-hour format or relative intervals)
+const schedule = [
+  { url: "https://example-dashboard-1.com", openTime: "08:00", closeDurationMinutes: 120 },
+  { url: "https://example-dashboard-2.com", openTime: "10:00", closeDurationMinutes: 60 }
+];
+
+// Set up alarms when the extension installs or boots up
+chrome.runtime.onInstalled.addListener(() => {
+  setupAlarms();
+});
+
+function setupAlarms() {
+  // Example: Check time or create a repeating/one-time alarm
+  chrome.alarms.create("checkSchedule", { periodInMinutes: 1 });
+}
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === "checkSchedule") {
+    const now = new Date();
+    const currentTimeStr = now.toTimeString().slice(0, 5); // "HH:MM"
+
+    schedule.forEach((item) => {
+      if (item.openTime === currentTimeStr) {
+        openAndManageTab(item);
+      }
+    });
+  }
+});
+
+function openAndManageTab(item) {
+  chrome.tabs.create({ url: item.url }, (tab) => {
+    // Automatically close the tab after the specified duration
+    setTimeout(() => {
+      if (tab && tab.id) {
+        chrome.tabs.remove(tab.id);
+      }
+    }, item.closeDurationMinutes * 60 * 1000);
+  });
+}
