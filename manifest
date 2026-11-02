@@ -1,14 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Kiosk Tab Scheduler",
+  "name": "Scheduled Slides Kiosk Extension",
   "version": "1.0",
+  "description": "Opens Google Slides presentation in kiosk mode at 12:00 AM and closes it at 3:30 PM daily.",
   "permissions": [
-    "tabs",
     "alarms",
-    "storage"
+    "tabs"
   ],
+  "kiosk_enabled": true,
+  "kiosk_only": false,
   "background": {
     "service_worker": "background.js"
-  },
-  "minimum_chrome_version": "100"
+  }
 }
